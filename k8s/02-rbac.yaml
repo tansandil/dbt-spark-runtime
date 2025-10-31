@@ -5,6 +5,7 @@ metadata:
   name: spark
   namespace: dn-dbt-spark
 
+---
 # dbt ServiceAccount
 apiVersion: v1
 kind: ServiceAccount
@@ -12,6 +13,7 @@ metadata:
   name: dbt 
   namespace: dn-dbt
 
+---
 # Spark Role
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -23,6 +25,7 @@ rules:
   resources: ["pods", "services", "configmaps"]
   verbs: ["*"]
 
+---
 # RoleBinding for Spark Engine
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -38,6 +41,7 @@ roleRef:
   name: spark-role
   apiGroup: rbac.authorization.k8s.io
 
+---
 # Allow dbt to discover Spark Service
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -49,6 +53,7 @@ rules:
   resources: ["services"]
   verbs: ["get", "list"]
 
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata: 

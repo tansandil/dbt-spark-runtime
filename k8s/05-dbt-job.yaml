@@ -15,6 +15,7 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
           - |
+            mkdir -p /workspace/dbt-project
             cp /scripts/run-dbt.sh /workspace/run-dbt.sh
             chmod +x /workspace/run-dbt.sh
             cp -r /dbt-project-src/* /workspace/dbt-project/
@@ -28,7 +29,7 @@ spec:
       containers: 
       - name: dbt
         image: python:3.9-slim
-        command: ["/bin/bash", "/workspace/run-dbt.sh"]
+        command: ["/bin/sh", "/workspace/run-dbt.sh"]
         volumeMounts: 
         - name: workspace
           mountPath: /workspace

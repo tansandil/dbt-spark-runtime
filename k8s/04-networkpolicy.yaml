@@ -12,8 +12,8 @@ spec:
   ingress: 
   - from:
     - namespaceSelector: 
-      matchLabels: 
-        name: dn-dbt
+        matchLabels: 
+          name: dn-dbt
     ports: 
     - protocol: TCP
       port: 10000
