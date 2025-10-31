@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dbt-scripts
+  namespace: dn-dbt
+data:
+  run-dbt.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "Getting Spark IP...."
+    SPARK_IP=$(kubectl get svc spark -n dn-dbt-spark -o jsonpath='{.spec.clusterIP}')
+    export SPARK_IP
+
+    echo "SPARK_IP=$SPARK_IP"
+
+    python3 -m venv /tmp/dbt-env
+    source /tmp/dbt-env/bin/activate
+    pip install --quiet dbt-core==1.7.19 dbt-spark==1.7.1 pyspark==3.5.0 protobuf==4.25.8
+
+    dbt debug --profiles-dir .
+    dbt run --profiles-dir .

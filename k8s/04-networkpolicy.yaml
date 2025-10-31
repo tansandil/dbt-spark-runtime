@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: 
+  name: allow-dbt-to-spark
+  namespace: dn-dbt-spark
+spec: 
+  podSelector:
+    matchLabels:
+      app: spark
+  policyTypes:
+  - Ingress
+  ingress: 
+  - from:
+    - namespaceSelector: 
+      matchLabels: 
+        name: dn-dbt
+    ports: 
+    - protocol: TCP
+      port: 10000

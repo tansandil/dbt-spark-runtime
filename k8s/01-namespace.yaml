@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dn-dbt-spark
+  labels: 
+    name: dn-dbt-spark
+---
+apiVersion: v1
+kind: Namespace
+metadata: 
+  name: dn-dbt
+  labels:
+    name: dn-dbt

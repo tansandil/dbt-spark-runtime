@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dbt-project
+  namespace: dn-dbt
+data:
+  dbt_project.yml: |
+    name: 'spark_test'
+    version: '1.0.0'
+    config-version: 2
+    model-path: ["models"]
+
+  profiles.yml: |
+    spark_test:
+      target: dev 
+      outputs: 
+        dev: 
+          type: spark
+          method: session 
+          host: "{{ env_var('SPARK_IP') }}"
+          port: 10000
+          schema: default
+          threads: 4
+
+  str_test.sql: |
+    {{ config(materialized='table') }}
+    SELECT 
+        1 as id, 
+        'test' as name,
+        current_timestamp() as loaded_at
+        

@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: spark
+  namespace: dn-dbt-spark
+  labels: 
+    app: spark
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: spark
+  template:
+    metadata: 
+      labels:
+        app: spark
+    spec:
+      serviceAccountName: spark 
+      containers:
+      - name: spark-thrift-server
+        image: apache/spark:3.5.0-scala2.12-java11-python3-ubuntu
+        command: ["/opt/spark/sbin/start-thriftserver.sh"]
+        env: 
+        - name: SPARK_NO_DAEMONIZE
+          value: "true"
+        - name: SPARK_LOCAL_IP
+          valueFrom: 
+            fieldRef:
+              fieldPath: status.podIP
+        args:
+        - --conf spark.sql.hive.thriftServer.singleSession=false
+        - --conf spark.sql.warehouse.dir=/tmp/spark-warehouse
+        - --conf spark.master=k8s://https://kubernetes.default.svc
+        - --conf spark.kubernetes.container.image=apache/spark:3.5.0-scala2.12-java11-python3-ubuntu
+        - --conf spark.kubernetes.namespace=dn-dbt-spark
+        - --conf spark.kubernetes.authenticate.driver.serviceAccountName=spark
+        - --conf spark.dynamicAllocation.enabled=true
+        - --conf spark.dynamicAllocation.minExecutors=0
+        - --conf spark.dynamicAllocation.maxExecutors=20
+        - --conf spark.dynamicAllocation.executorIdleTimeout=60s
+        - --conf spark.executor.memory=1g
+        - --conf spark.driver.memory=1g
+        - --conf spark.driver.host=$(SPARK_LOCAL_IP)
+        - --hiveconf hive.server2.thrift.port=10000
+        ports: 
+        - containerPort: 10000
+        resources: 
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits: 
+            memory: "3Gi"
+            cpu: "2"
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: spark
+  namespace: dn-dbt-spark
+spec: 
+  type: ClusterIP
+  ports: 
+  - port: 10000
+    targetPort: 10000
+  selector:
+    app: spark

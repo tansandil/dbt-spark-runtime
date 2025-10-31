@@ -1,0 +1,10 @@
+spark_test:
+  target: dev 
+  outputs: 
+    dev: 
+      type: spark
+      method: session 
+      host: "{{ env_var('SPARK_IP') }}"
+      port: 10000
+      schema: default
+      threads: 4

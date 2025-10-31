@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+metadata: 
+  name: dbt-run
+  namespace: dn-dbt
+spec: 
+  backoffLimit: 1
+  template: 
+    spec: 
+      serviceAccountName: dbt
+      restartPolicy: Never
+      initContainers:
+      - name: init
+        image: alpine:3.18
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            cp /scripts/run-dbt.sh /workspace/run-dbt.sh
+            chmod +x /workspace/run-dbt.sh
+            cp -r /dbt-project-src/* /workspace/dbt-project/
+        volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+        - name: dbt-project-src
+          mountPath: /dbt-project-src
+        - name: workspace
+          mountPath: /workspace
+      containers: 
+      - name: dbt
+        image: python:3.9-slim
+        command: ["/bin/bash", "/workspace/run-dbt.sh"]
+        volumeMounts: 
+        - name: workspace
+          mountPath: /workspace
+      volumes:
+      - name: scripts
+        configMap: 
+          name: dbt-scripts
+          defaultMode: 0755
+      - name: dbt-project-src
+        configMap:
+          name: dbt-project
+      - name: workspace
+        emptyDir: {}
