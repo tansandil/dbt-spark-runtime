@@ -2,7 +2,7 @@
 set -e
 
 echo "Getting Spark IP...."
-SPARK_IP=$(kubectl get svc spark -n dn-dbt-spark -o jsonpath='{.spec.clusterIP}')
+SPARK_IP="spark.dn-dbt-spark.svc.cluster.local"
 export SPARK_IP
 
 echo "SPARK_IP=$SPARK_IP"
