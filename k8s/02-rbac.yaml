@@ -26,7 +26,7 @@ rules:
   verbs: ["*"]
 
 ---
-# RoleBinding for Spark Engine
+# RoleBinding for Spark ServiceAccount
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata: 
@@ -42,6 +42,18 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 
 ---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: spark-executor-role
+rules: 
+  - apiGroups: [""]
+    resources: ["pods", "pod/log", "services", "configmaps", "secrets"]
+    verbs: ["create", "get", "list", "watch", "delete"]
+  
+---
+
 # Allow dbt to discover Spark Service
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
