@@ -28,7 +28,6 @@ spec:
             fieldRef:
               fieldPath: status.podIP
         args:
-        - --conf spark.sql.warehouse.dir=/tmp/spark-warehouse
         - --conf spark.master=k8s://https://kubernetes.default.svc:443
         - --conf spark.kubernetes.container.image=apache/spark:3.5.0-scala2.12-java11-python3-ubuntu
         - --conf spark.kubernetes.namespace=dn-dbt-spark
