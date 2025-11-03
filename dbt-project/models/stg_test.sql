@@ -1,5 +1,7 @@
 {{ config(materialized='table') }}
 SELECT 
-    1 as id, 
-    'test' as name,
+    id,
+    concat('user_', cast(id as string)) as username,
+    rand() * 1000 as score,
     current_timestamp() as loaded_at
+FROM range(500000)
