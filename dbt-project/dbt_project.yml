@@ -2,4 +2,4 @@ name: 'spark_test'
 version: '1.0.0'
 config-version: 2
 
-model-path: ["models"]
+model-paths: ["models"]

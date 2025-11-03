@@ -8,7 +8,11 @@ data:
     name: 'spark_test'
     version: '1.0.0'
     config-version: 2
-    model-path: ["models"]
+    model-paths: ["models"]
+
+    models:
+      spark_test:
+        +materialized: table
 
   profiles.yml: |
     spark_test:
@@ -16,7 +20,7 @@ data:
       outputs: 
         dev: 
           type: spark
-          method: session 
+          method: session
           host: "{{ env_var('SPARK_IP') }}"
           port: 10000
           schema: default
@@ -28,4 +32,3 @@ data:
         1 as id, 
         'test' as name,
         current_timestamp() as loaded_at
-        
