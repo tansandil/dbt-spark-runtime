@@ -35,6 +35,8 @@ spec:
         volumeMounts:
         - name: workspace
           mountPath: /workspace
+        - name: dbt-project-src
+          mountPath: /dbt-project-src
       volumes:
       - name: scripts
         configMap:
