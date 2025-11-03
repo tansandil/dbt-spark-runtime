@@ -31,7 +31,15 @@ spec:
       containers:
       - name: dbt
         image: python:3.9-slim
-        command: ["/bin/sh", "/workspace/run-dbt.sh"]
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            apt-get update && apt-get install -y git default-jdk
+            export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
+            /workspace/run-dbt.sh
+        env:
+        - name: JAVA_HOME
+          value: "/usr/lib/jvm/default-java"
         volumeMounts:
         - name: workspace
           mountPath: /workspace
