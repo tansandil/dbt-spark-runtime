@@ -18,6 +18,6 @@ data:
     . /tmp/dbt-env/bin/activate
     pip install --quiet dbt-core==1.7.19 dbt-spark==1.7.1 pyspark==3.5.0 protobuf==4.25.8
 
-    dbt debug --profiles-dir /workspace/dbt-project --project-dir /workspace/dbt-project
+    dbt debug --profiles-dir /workspace/dbt-project --project-dir /workspace/dbt-project --bypass-version-check
     dbt run --profiles-dir /workspace/dbt-project --project-dir /workspace/dbt-project
     
