@@ -8,6 +8,7 @@ data:
     name: 'spark_test'
     version: '1.0.0'
     config-version: 2
+    profile: 'spark_test'  # <-- ADD THIS LINE
     model-paths: ["models"]
 
     models:
@@ -29,6 +30,8 @@ data:
   str_test.sql: |
     {{ config(materialized='table') }}
     SELECT 
-        1 as id, 
-        'test' as name,
+        id,
+        concat('user_', cast(id as string)) as username,
+        rand() * 1000 as score,
         current_timestamp() as loaded_at
+    FROM range(500000)
